@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Lemuriets/diary/internal/app"
+	"github.com/Lemuriets/diary/app"
 	"github.com/joho/godotenv"
 )
 

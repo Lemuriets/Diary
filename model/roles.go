@@ -1,7 +1,7 @@
-package models
+package model
 
 const (
-	MEMBER = iota + 1
+	MEMBER uint8 = iota + 1
 	CHILD
 	TEACHER
 	ADMINISTRATOR
