@@ -9,54 +9,55 @@ import (
 type User struct {
 	gorm.Model
 
-	Login        string `json:"login" gorm:"not null; unique"`
+	Login        string `json:"login" gorm:"not null; unique; size:100"`
 	PasswordHash string `json:"password" gorm:"not null"`
-	SchoolID     uint
-	School       School `json:"school" gorm:"foreignkey:SchoolID"`
-	ClassID      Class  `json:"class"`
+	ClassID      uint   `json:"classId"`
+	Class        Class  `json:"class" gorm:"foreignkey:ClassID"`
 	Permissions  uint8  `json:"permissions"`
 }
 
 type Class struct {
 	gorm.Model
 
-	ID      uint  `json:"id" gorm:"primarykey:auto_increment"`
-	Number  uint8 `json:"number" gorm:"not null"`
-	OwnerID uint  `json:"ownerid" gorm:"not null"`
+	ID       uint   `json:"id" gorm:"primarykey:autoIncrement"`
+	Number   uint8  `json:"number" gorm:"not null"`
+	OwnerID  uint   `json:"ownerId" gorm:"not null"`
+	SchoolID uint   `json:"SchoolID"`
+	School   School `json:"schoolId" gorm:"foreignkey:SchoolID"`
 }
 
 type School struct {
 	gorm.Model
 
-	ID      uint   `json:"id" gorm:"primarykey:auto_increment"`
+	ID      uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Country string `json:"country" gorm:"not null"`
 	Region  string `json:"region" gorm:"not null"`
-	ClassID uint
-	Classes []Class `json:"classes" gorm:"foreignkey:ClassID"`
 }
 
 type Homework struct {
 	gorm.Model
 
-	ID       uint   `json:"id" gorm:"primarykey:auto_increment"`
-	Payload  string `json:"payload"`
-	SchoolID School `json:"school" gorm:"not null"`
-	ClassID  Class  `json:"class" gorm:"not null"`
+	ID      uint   `json:"id" gorm:"primarykey:autoIncrement"`
+	Payload string `json:"payload"`
+	ClassID uint   `json:"classId"`
+	Class   Class  `json:"class" gorm:"not null; foreignkey:ClassID"`
 }
 
 type Lesson struct {
 	gorm.Model
 
-	Name string `json:"name" gorm:"not null; unique"`
+	ID        uint    `json:"id" gorm:"primarykey:autoIncrement"`
+	Name      string  `json:"name" gorm:"not null; unique"`
+	SheduleID uint    `json:"sheduleId"`
+	Shedule   Shedule `json:"shedule" gorm:"not null; foreignkey:SheduleID"`
 }
 
 type Shedule struct {
 	gorm.Model
 
-	ID        uint      `json:"id" gorm:"primarykey:auto_increment"`
-	SchoolID  School    `json:"school" gorm:"not null"`
-	ClassID   Class     `json:"class" gorm:"not null"`
+	ID        uint      `json:"id" gorm:"primarykey:autoIncrement"`
 	Date      time.Time `json:"date" gorm:"not null"`
-	DayOfWeek uint8     `json:"dayofweek" gorm:"not null"`
-	Lessons   []Lesson  `json:"lessons" gorm:"not null"`
+	DayOfWeek uint8     `json:"dayOfWeek" gorm:"not null"`
+	ClassID   uint      `json:"classId"`
+	Class     Class     `json:"class" gorm:"not null; foreignkey:ClassID"`
 }

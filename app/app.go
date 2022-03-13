@@ -1,19 +1,31 @@
 package app
 
 import (
+	"log"
+
 	"github.com/Lemuriets/diary/model"
 	"github.com/Lemuriets/diary/pkg/db"
-	"github.com/gorilla/mux"
 )
 
 type App struct {
-	Router *mux.Router
+	AuthHandler string
 }
 
 func NewApp() *App {
 	database := db.InitDB()
 
-	database.AutoMigrate(&model.User{}, &model.Class{}, &model.School{}, &model.Homework{}, &model.Lesson{}, &model.Shedule{})
+	err := database.AutoMigrate(
+		&model.User{},
+		&model.Class{},
+		&model.School{},
+		&model.Homework{},
+		&model.Lesson{},
+		&model.Shedule{},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return &App{}
 }
