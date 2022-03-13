@@ -49,7 +49,7 @@ type Lesson struct {
 	ID        uint    `json:"id" gorm:"primarykey:autoIncrement"`
 	Name      string  `json:"name" gorm:"not null; unique"`
 	SheduleID uint    `json:"sheduleId"`
-	Shedule   Shedule `json:"shedule" gorm:"not null; foreignkey:SheduleID"`
+	Shedule   Shedule `json:"shedule" gorm:"foreignkey:SheduleID"`
 }
 
 type Shedule struct {
