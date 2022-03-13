@@ -3,12 +3,19 @@ package app
 import (
 	"log"
 
+	"github.com/gorilla/mux"
+
+	authhttp "github.com/Lemuriets/diary/internal/auth/http"
+	userhttp "github.com/Lemuriets/diary/internal/users/http"
+
 	"github.com/Lemuriets/diary/model"
 	"github.com/Lemuriets/diary/pkg/db"
 )
 
 type App struct {
-	AuthHandler string
+	Router      *mux.Router
+	AuthHandler *authhttp.Handler
+	UserHandler *userhttp.Handler
 }
 
 func NewApp() *App {
@@ -27,5 +34,7 @@ func NewApp() *App {
 		log.Fatal(err)
 	}
 
-	return &App{}
+	return &App{
+		Router: mux.NewRouter(),
+	}
 }
