@@ -19,10 +19,10 @@ func NewUseCase(repo auth.Repository) *UseCase {
 }
 
 func (uc *UseCase) SignIn(w http.ResponseWriter, r *http.Request) {
-	user, err := uc.Repository.Get(r.FormValue("login"), r.FormValue("password"))
+	countUsers := uc.Repository.GetCount(r.FormValue("login"), r.FormValue("password"))
 
-	if err != nil {
-		log.Fatal(err)
+	if countUsers == 0 {
+
 	}
 
 }
