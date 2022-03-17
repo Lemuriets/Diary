@@ -61,3 +61,13 @@ type Shedule struct {
 	ClassID   uint      `json:"classId"`
 	Class     Class     `json:"class" gorm:"not null; foreignkey:ClassID"`
 }
+
+type Mark struct {
+	gorm.Model
+
+	Number   uint8  `json:"number"`
+	UserID   uint   `json:"userId"`
+	User     User   `json:"user" gorm:"foreignkey:UserID"`
+	LessonID uint   `json:"lessonId"`
+	Lesson   Lesson `json:"lesson" gorm:"foreignkey:LessonID"`
+}

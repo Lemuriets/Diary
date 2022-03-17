@@ -1,9 +1,13 @@
 package http
 
-func (h *Handler) SignUp() {
+import (
+	"net/http"
+)
 
+func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
+	h.UseCase.SignUp(w, r)
 }
 
-func (h *Handler) SignIn() {
+func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 }

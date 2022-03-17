@@ -2,10 +2,13 @@ package app
 
 import (
 	"log"
+	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 
 	authhttp "github.com/Lemuriets/diary/internal/auth/http"
+	schoolhttp "github.com/Lemuriets/diary/internal/schools/http"
 	userhttp "github.com/Lemuriets/diary/internal/users/http"
 
 	"github.com/Lemuriets/diary/model"
@@ -13,9 +16,15 @@ import (
 )
 
 type App struct {
-	Router      *mux.Router
-	AuthHandler *authhttp.Handler
-	UserHandler *userhttp.Handler
+	Router        *mux.Router
+	AuthHandler   *authhttp.Handler
+	UserHandler   *userhttp.Handler
+	SchoolHandler *schoolhttp.Handler
+}
+
+type Sub struct {
+	App    *App
+	Prefix string
 }
 
 func NewApp() *App {
@@ -28,6 +37,7 @@ func NewApp() *App {
 		&model.Homework{},
 		&model.Lesson{},
 		&model.Shedule{},
+		&model.Mark{},
 	)
 
 	if err != nil {
@@ -35,6 +45,27 @@ func NewApp() *App {
 	}
 
 	return &App{
-		Router: mux.NewRouter(),
+		Router:      mux.NewRouter(),
+		AuthHandler: RegisterAuthService(database),
 	}
+}
+
+func (app *App) Group(prefix string, handler func(w http.ResponseWriter, r *http.Request), methods ...string) *Sub {
+	app.Router.HandleFunc(prefix, handler).Methods(methods...)
+
+	if strings.HasSuffix(prefix, "/") {
+		prefix = prefix[:len(prefix)-1]
+	}
+	return &Sub{
+		App:    app,
+		Prefix: prefix,
+	}
+}
+
+func (sub *Sub) RegisterSubHandler(prefix string, handler func(w http.ResponseWriter, r *http.Request), methods ...string) {
+	if len(methods) == 0 {
+		panic(MethodsNotSpecified)
+	}
+
+	sub.App.Router.HandleFunc(sub.Prefix+prefix, handler).Methods(methods...)
 }

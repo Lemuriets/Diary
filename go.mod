@@ -17,7 +17,7 @@ require (
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.12 // indirect
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
+	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gorm.io/driver/postgres v1.3.1 // indirect
 	gorm.io/driver/sqlite v1.3.1 // indirect
