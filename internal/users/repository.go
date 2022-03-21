@@ -3,8 +3,7 @@ package users
 import "github.com/Lemuriets/diary/model"
 
 type Repository interface {
-	GetById(id uint) (model.User, error)
-	Create()
-	Update()
-	Delete()
+	GetById(id uint64) (model.User, error)
+	Update(id uint64, updateFields map[string]interface{}) error
+	Delete(id uint64) error
 }

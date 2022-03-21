@@ -17,7 +17,7 @@ func (app *App) Run() {
 	app.RouteHomework()
 	app.RouteShedules()
 
-	fmt.Println("server started")
+	fmt.Println("The server was started")
 	log.Fatal(http.ListenAndServe("127.0.0.1:8000", app.Router))
 }
 
@@ -32,6 +32,8 @@ func (app *App) RouteUsers() {
 	sub := app.Group("/api/users", app.UsersHandler.HelloMsg, "GET")
 
 	sub.RegisterSubHandler("/{id:[1-9]+}", app.UsersHandler.Get, "GET")
+	sub.RegisterSubHandler("/update/{id:[1-9]+}", app.UsersHandler.Update, "POST")
+	sub.RegisterSubHandler("/delete/{id:[1-9]+}", app.UsersHandler.Delete, "POST")
 }
 
 func (app *App) RouteClasses() {

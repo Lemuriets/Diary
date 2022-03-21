@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"os"
+	"time"
 
 	"github.com/Lemuriets/diary/internal/auth"
 	"github.com/Lemuriets/diary/pkg/crypto"
@@ -51,6 +52,10 @@ func (uc *UseCase) GenerateJWT(login, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
+		StandardClaims: jwt.StandardClaims{
+			IssuedAt:  time.Now().Unix(),
+			ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
+		},
 		UserId:          user.ID,
 		UserPermissions: user.Permissions,
 	})

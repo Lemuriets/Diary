@@ -14,6 +14,7 @@ type User struct {
 	Name         string `json:"name" gorm:"not null"`
 	Lastname     string `json:"lastname" gorm:"not null"`
 	Patronymic   string `json:"Patronymic" gorm:"not null"`
+	Age          string `json:"age"`
 	ClassID      uint   `json:"classId"`
 	Class        Class  `json:"class" gorm:"foreignkey:ClassID"`
 	Permissions  uint8  `json:"permissions"`

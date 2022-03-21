@@ -9,21 +9,20 @@ import (
 )
 
 func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
-	httpjson.RespondJSON(w, map[string]string{
-		"message": "this is auth service",
-	}, 200)
+	httpjson.InfoResponse(w, "this is an auth service")
 }
 
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 	token, err := h.UseCase.GenerateJWT(r.FormValue("login"), r.FormValue("password"))
 
 	if err != nil {
-		httpjson.RespondJSON(w, map[string]string{
-			"message": "the user wasn't found",
-		}, 401)
-	} else {
-		httpjson.RespondJSON(w, token, 200)
+		httpjson.NotFoundResponse(w)
+		return
 	}
+	httpjson.OKResponse(w, map[string]string{
+		"token": token,
+	})
+
 }
 
 func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
@@ -36,10 +35,9 @@ func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.UseCase.Create(user); err != nil {
-		httpjson.RespondJSON(w, map[string]string{
-			"message": err.Error(),
-		}, 400)
-	} else {
-		httpjson.RespondJSON(w, user, 200)
+		httpjson.InternalServerErrorResponse(w)
+		return
 	}
+	httpjson.RespondJSON(w, user, http.StatusOK)
+
 }
