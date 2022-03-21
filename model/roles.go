@@ -1,8 +1,9 @@
 package model
 
 const (
-	MEMBER uint8 = iota + 1
-	CHILD
-	TEACHER
+	SUPERUSER uint8 = iota + 1
 	ADMINISTRATOR
+	TEACHER
+	CHILD
+	MEMBER
 )

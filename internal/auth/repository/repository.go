@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 
 	"github.com/Lemuriets/diary/model"
@@ -16,18 +18,42 @@ func NewRepository(db *gorm.DB) *Repository {
 	}
 }
 
-func (repo *Repository) Get(login, password string) (model.User, error) {
+func (repo *Repository) Get(login, passwordHash string) (model.User, error) {
 	var user model.User
 
-	result := repo.DB.Where("login = ?, password = ?", login, password).First(&user)
+	result := repo.DB.Where("login = ? AND password_hash = ?", login, passwordHash).First(&user)
+	fmt.Println(login, passwordHash)
+	return user, result.Error
+}
+
+func (repo *Repository) GetByLogin(login string) (model.User, error) {
+	var user model.User
+
+	result := repo.DB.Where("login = ?", login).First(&user)
 
 	return user, result.Error
 }
 
-func (repo *Repository) GetCount(login, password string) int64 {
+func (repo *Repository) GetById(id uint) (model.User, error) {
+	var user model.User
+
+	result := repo.DB.Where("ID = ?", id).First(&user)
+
+	return user, result.Error
+}
+
+func (repo *Repository) GetAll() ([]model.User, error) {
+	var users []model.User
+
+	result := repo.DB.Find(&users)
+
+	return users, result.Error
+}
+
+func (repo *Repository) GetCountByLogin(login string) int64 {
 	var count int64
 
-	repo.DB.Where("login = ?, password = ?", login, password).Count(&count)
+	repo.DB.Where("login = ?", login).Count(&count)
 
 	return count
 }

@@ -6,6 +6,10 @@ import (
 	authhttp "github.com/Lemuriets/diary/internal/auth/http"
 	authrepo "github.com/Lemuriets/diary/internal/auth/repository"
 	authuc "github.com/Lemuriets/diary/internal/auth/usecase"
+
+	usershttp "github.com/Lemuriets/diary/internal/users/http"
+	usersrepo "github.com/Lemuriets/diary/internal/users/repository"
+	usersuc "github.com/Lemuriets/diary/internal/users/usecase"
 )
 
 func RegisterAuthService(db *gorm.DB) *authhttp.Handler {
@@ -15,8 +19,11 @@ func RegisterAuthService(db *gorm.DB) *authhttp.Handler {
 	return authhttp.NewHandler(uc)
 }
 
-func RegisterUsersService() {
+func RegisterUsersService(db *gorm.DB) *usershttp.Handler {
+	repo := usersrepo.NewRepository(db)
+	uc := usersuc.NewUseCase(repo)
 
+	return usershttp.NewHandler(uc)
 }
 
 func RegisterClassesService() {

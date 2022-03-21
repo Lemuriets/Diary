@@ -1,7 +1,9 @@
 package users
 
+import "github.com/Lemuriets/diary/model"
+
 type Repository interface {
-	Get()
+	GetById(id uint) (model.User, error)
 	Create()
 	Update()
 	Delete()

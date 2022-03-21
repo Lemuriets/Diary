@@ -1,15 +1,24 @@
 package usecase
 
 import (
-	"log"
-	"net/http"
+	"os"
 
 	"github.com/Lemuriets/diary/internal/auth"
-	"github.com/Lemuriets/diary/pkg/httpjson"
+	"github.com/Lemuriets/diary/pkg/crypto"
+	"github.com/golang-jwt/jwt"
+
+	// "github.com/golang-jwt/jwt"
+	"github.com/Lemuriets/diary/model"
 )
 
 type UseCase struct {
 	Repository auth.Repository
+}
+
+type tokenClaims struct {
+	jwt.StandardClaims
+	UserId          uint  `json:"userId"`
+	UserPermissions uint8 `json:"userPermissions"`
 }
 
 func NewUseCase(repo auth.Repository) *UseCase {
@@ -18,21 +27,33 @@ func NewUseCase(repo auth.Repository) *UseCase {
 	}
 }
 
-func (uc *UseCase) SignIn(w http.ResponseWriter, r *http.Request) {
-	countUsers := uc.Repository.GetCount(r.FormValue("login"), r.FormValue("password"))
-
-	if countUsers == 0 {
-
-	}
-
+func (uc *UseCase) GetCount(user model.User) int64 {
+	return uc.Repository.GetCountByLogin(user.Login)
 }
 
-func (uc *UseCase) SignUp(w http.ResponseWriter, r *http.Request) {
-	user, err := uc.Repository.Get(r.FormValue("login"), r.FormValue("password"))
-
-	if err != nil {
-		log.Fatal(err)
+func (uc *UseCase) Create(user model.User) error {
+	if user.Login == "" || user.PasswordHash == "" {
+		return auth.UnderfinedLoginOrPassword
 	}
 
-	httpjson.RespondJSON(w, 200, user)
+	if err := uc.Repository.Create(user); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (uc *UseCase) GenerateJWT(login, password string) (string, error) {
+	user, err := uc.Repository.GetByLogin(login)
+
+	if !crypto.CompareHashAndPassword(password, user.PasswordHash) || err != nil {
+		return "", err
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
+		UserId:          user.ID,
+		UserPermissions: user.Permissions,
+	})
+
+	return token.SignedString([]byte(os.Getenv("secretkey")))
 }

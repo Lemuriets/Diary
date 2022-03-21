@@ -1,8 +1,11 @@
 package auth
 
-import "net/http"
+import (
+	"github.com/Lemuriets/diary/model"
+)
 
 type UseCase interface {
-	SignUp(w http.ResponseWriter, r *http.Request)
-	SignIn(w http.ResponseWriter, r *http.Request)
+	GetCount(user model.User) int64
+	Create(user model.User) error
+	GenerateJWT(login, password string) (string, error)
 }

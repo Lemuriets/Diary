@@ -5,7 +5,10 @@ import (
 )
 
 type Repository interface {
-	Get(login, password string) (model.User, error)
-	GetCount(login, password string) int64
-	Create(login, password string) error
+	Get(login, passwordHash string) (model.User, error)
+	GetByLogin(login string) (model.User, error)
+	GetAll() ([]model.User, error)
+	GetById(id uint) (model.User, error)
+	GetCountByLogin(login string) int64
+	Create(user model.User) error
 }

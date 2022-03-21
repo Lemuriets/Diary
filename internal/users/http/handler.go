@@ -5,11 +5,11 @@ import (
 )
 
 type Handler struct {
-	Repository users.UseCase
+	UseCase users.UseCase
 }
 
 func NewHandler(uc users.UseCase) *Handler {
 	return &Handler{
-		Repository: uc,
+		UseCase: uc,
 	}
 }

@@ -11,6 +11,9 @@ type User struct {
 
 	Login        string `json:"login" gorm:"not null; unique; size:100"`
 	PasswordHash string `json:"password" gorm:"not null"`
+	Name         string `json:"name" gorm:"not null"`
+	Lastname     string `json:"lastname" gorm:"not null"`
+	Patronymic   string `json:"Patronymic" gorm:"not null"`
 	ClassID      uint   `json:"classId"`
 	Class        Class  `json:"class" gorm:"foreignkey:ClassID"`
 	Permissions  uint8  `json:"permissions"`

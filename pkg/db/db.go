@@ -5,6 +5,7 @@ import (
 	// "os"
 
 	// "gorm.io/driver/postgres"
+	"github.com/Lemuriets/diary/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -35,4 +36,21 @@ func InitDB() *gorm.DB {
 	}
 
 	return db
+}
+
+func checkSuperUser(db *gorm.DB) bool {
+	var users []model.User
+
+	db.Find(&users)
+
+	if len(users) == 0 {
+		return false
+	}
+	return true
+}
+
+func CreateSuperUser(db *gorm.DB, superUser model.User) {
+	if !checkSuperUser(db) {
+		db.Create(&superUser)
+	}
 }
