@@ -44,10 +44,10 @@ func (uc *UseCase) Create(user model.User) error {
 	return nil
 }
 
-func (uc *UseCase) GenerateJWT(login, password string) (string, error) {
+func (uc *UseCase) GenerateAccessToken(login, password string) (string, error) {
 	user, err := uc.Repository.GetByLogin(login)
 
-	if !crypto.CompareHashAndPassword(password, user.PasswordHash) || err != nil {
+	if err != nil || !crypto.CompareHashAndPassword(password, user.PasswordHash) {
 		return "", err
 	}
 
@@ -56,9 +56,31 @@ func (uc *UseCase) GenerateJWT(login, password string) (string, error) {
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
 		},
-		UserId:          user.ID,
+		UserId:          uint(user.ID),
 		UserPermissions: user.Permissions,
 	})
-
 	return token.SignedString([]byte(os.Getenv("secretkey")))
 }
+
+func (uc *UseCase) GenerateRefreshToken() {
+
+}
+
+// func (uc *UseCase) newJWT() (string, error) {
+// 	user, err := uc.Repository.GetByLogin(login)
+
+// 	if err != nil || !crypto.CompareHashAndPassword(password, user.PasswordHash) {
+// 		return "", err
+// 	}
+
+// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
+// 		StandardClaims: jwt.StandardClaims{
+// 			IssuedAt:  time.Now().Unix(),
+// 			ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
+// 		},
+// 		UserId:          uint(user.ID),
+// 		UserPermissions: user.Permissions,
+// 	})
+
+// 	return token.SignedString([]byte(os.Getenv("secretkey")))
+// }

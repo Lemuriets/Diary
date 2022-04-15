@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 
 	"github.com/Lemuriets/diary/model"
@@ -22,7 +20,6 @@ func (repo *Repository) Get(login, passwordHash string) (model.User, error) {
 	var user model.User
 
 	result := repo.DB.Where("login = ? AND password_hash = ?", login, passwordHash).First(&user)
-	fmt.Println(login, passwordHash)
 	return user, result.Error
 }
 

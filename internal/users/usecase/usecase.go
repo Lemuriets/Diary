@@ -32,3 +32,21 @@ func (uc *UseCase) Update(id uint64, updateFields map[string]interface{}) error 
 func (uc *UseCase) Delete(id uint64) error {
 	return uc.Repository.Delete(id)
 }
+
+func (uc *UseCase) MultipleDelete(ids []uint64) error {
+	return uc.Repository.MultipleDelete(ids)
+}
+
+func (uc *UseCase) AddClass(user *model.User, class model.Class) error {
+	if class.ID == 0 {
+		return users.SchoolIsNotExists
+	} else if user.ID == 0 {
+		return users.UndefinedUser
+	}
+
+	uc.Repository.Update(user.ID, map[string]interface{}{
+		"class_id": class.ID,
+	})
+
+	return nil
+}

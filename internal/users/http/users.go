@@ -20,20 +20,26 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user := h.UseCase.GetById(id)
+	fmt.Println(r.RemoteAddr)
 	httpjson.OKResponse(w, user)
 
 }
 
 func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
-	_, err := parseurl.GetIdUint64(r)
+	id, err := parseurl.GetIdUint64(r)
+	updateValues := map[string]interface{}{}
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)
 		return
 	}
-	// I'll do it later
-	fmt.Println(r.PostForm)
-	// h.UseCase.Update(id, r.PostForm)
+	if r.Form == nil {
+		r.ParseMultipartForm(32 << 20)
+	}
+	for k, v := range r.Form {
+		updateValues[k] = v[0]
+	}
+	h.UseCase.Update(id, updateValues)
 }
 
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {

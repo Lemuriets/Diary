@@ -34,3 +34,9 @@ func (repo *Repository) Delete(id uint64) error {
 
 	return result.Error
 }
+
+func (repo *Repository) MultipleDelete(ids []uint64) error {
+	result := repo.DB.Unscoped().Delete(&model.User{}, ids)
+
+	return result.Error
+}

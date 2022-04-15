@@ -6,4 +6,5 @@ type UseCase interface {
 	GetById(id uint64) model.User
 	Update(id uint64, updateFields map[string]interface{}) error
 	Delete(id uint64) error
+	AddClass(user *model.User, class model.Class) error
 }

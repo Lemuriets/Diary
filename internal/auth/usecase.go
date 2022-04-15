@@ -7,5 +7,6 @@ import (
 type UseCase interface {
 	GetCount(user model.User) int64
 	Create(user model.User) error
-	GenerateJWT(login, password string) (string, error)
+	GenerateAccessToken(login, password string) (string, error)
+	GenerateRefreshToken()
 }

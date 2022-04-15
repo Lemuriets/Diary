@@ -13,14 +13,14 @@ func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
-	token, err := h.UseCase.GenerateJWT(r.FormValue("login"), r.FormValue("password"))
+	accessToken, err := h.UseCase.GenerateAccessToken(r.FormValue("login"), r.FormValue("password"))
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)
 		return
 	}
 	httpjson.OKResponse(w, map[string]string{
-		"token": token,
+		"accessToken": accessToken,
 	})
 
 }
