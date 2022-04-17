@@ -3,9 +3,11 @@ package http
 import (
 	"net/http"
 
+	"github.com/Lemuriets/diary/internal/auth"
 	"github.com/Lemuriets/diary/model"
 	"github.com/Lemuriets/diary/pkg/crypto"
 	"github.com/Lemuriets/diary/pkg/httpjson"
+	"gorm.io/gorm"
 )
 
 func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
@@ -13,14 +15,19 @@ func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
-	accessToken, err := h.UseCase.GenerateAccessToken(r.FormValue("login"), r.FormValue("password"))
+	accessToken, errAc := h.UseCase.GenerateAccessToken(r.FormValue("login"), r.FormValue("password"))
+	refreshToken, errRef := h.UseCase.GenerateRefreshToken(r.FormValue("login"))
 
-	if err != nil {
+	if errRef != nil || errAc == gorm.ErrRecordNotFound {
 		httpjson.NotFoundResponse(w)
+		return
+	} else if errAc == auth.WrongPassword {
+		httpjson.UnauthorizedResponse(w)
 		return
 	}
 	httpjson.OKResponse(w, map[string]string{
-		"accessToken": accessToken,
+		"accessToken":  accessToken,
+		"refreshToken": refreshToken,
 	})
 
 }
@@ -39,5 +46,17 @@ func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httpjson.RespondJSON(w, user, http.StatusOK)
+}
+
+func (h *Handler) UpdateTokens(w http.ResponseWriter, r *http.Request) {
 
 }
+
+// get token
+
+// jwt.Parse(f, func(token *jwt.Token) (interface{}, error) {
+// 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+// 		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+// 	}
+// 	return []byte(os.Getenv("secretkey")), nil
+// })

@@ -8,5 +8,5 @@ type UseCase interface {
 	GetCount(user model.User) int64
 	Create(user model.User) error
 	GenerateAccessToken(login, password string) (string, error)
-	GenerateRefreshToken()
+	GenerateRefreshToken(login string) (string, error)
 }

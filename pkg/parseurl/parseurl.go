@@ -7,8 +7,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetIdUint64(r *http.Request) (uint64, error) {
+func GetIdUint(r *http.Request) (uint, error) {
 	id := mux.Vars(r)["id"]
+	result, err := strconv.ParseUint(id, 10, 64)
 
-	return strconv.ParseUint(id, 10, 64)
+	return uint(result), err
 }

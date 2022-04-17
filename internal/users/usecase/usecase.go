@@ -15,7 +15,7 @@ func NewUseCase(repo users.Repository) *UseCase {
 	}
 }
 
-func (uc *UseCase) GetById(id uint64) model.User {
+func (uc *UseCase) GetById(id uint) model.User {
 	user, err := uc.Repository.GetById(id)
 
 	if err != nil {
@@ -25,15 +25,15 @@ func (uc *UseCase) GetById(id uint64) model.User {
 	return user
 }
 
-func (uc *UseCase) Update(id uint64, updateFields map[string]interface{}) error {
+func (uc *UseCase) Update(id uint, updateFields map[string]interface{}) error {
 	return uc.Repository.Update(id, updateFields)
 }
 
-func (uc *UseCase) Delete(id uint64) error {
+func (uc *UseCase) Delete(id uint) error {
 	return uc.Repository.Delete(id)
 }
 
-func (uc *UseCase) MultipleDelete(ids []uint64) error {
+func (uc *UseCase) MultipleDelete(ids []uint) error {
 	return uc.Repository.MultipleDelete(ids)
 }
 

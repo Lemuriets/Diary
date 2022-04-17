@@ -39,6 +39,7 @@ func NewApp() *App {
 		&model.Lesson{},
 		&model.Shedule{},
 		&model.Mark{},
+		&model.RefreshSession{},
 	)
 	superUser := model.User{
 		Login:        "Lemuriets",

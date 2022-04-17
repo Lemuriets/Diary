@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 
-	ID           uint64 `json:"id" gorm:"primarykey:autoIncrement"`
+	ID           uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Login        string `json:"login" gorm:"not null; unique; size:100"`
 	PasswordHash string `json:"password" gorm:"not null"`
 	Name         string `json:"name" gorm:"not null"`
@@ -24,7 +24,7 @@ type User struct {
 type Class struct {
 	gorm.Model
 
-	ID       uint64 `json:"id" gorm:"primarykey:autoIncrement"`
+	ID       uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Number   uint8  `json:"number" gorm:"not null"`
 	OwnerID  uint64 `json:"ownerId" gorm:"not null"`
 	SchoolID uint64 `json:"SchoolID"`
@@ -34,7 +34,7 @@ type Class struct {
 type School struct {
 	gorm.Model
 
-	ID      uint64 `json:"id" gorm:"primarykey:autoIncrement"`
+	ID      uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Country string `json:"country" gorm:"not null"`
 	Region  string `json:"region" gorm:"not null"`
 }
@@ -42,7 +42,7 @@ type School struct {
 type Homework struct {
 	gorm.Model
 
-	ID      uint64 `json:"id" gorm:"primarykey:autoIncrement"`
+	ID      uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Payload string `json:"payload"`
 	ClassID uint64 `json:"classId"`
 	Class   Class  `json:"class" gorm:"not null; foreignkey:ClassID"`
@@ -51,7 +51,7 @@ type Homework struct {
 type Lesson struct {
 	gorm.Model
 
-	ID        uint64  `json:"id" gorm:"primarykey:autoIncrement"`
+	ID        uint    `json:"id" gorm:"primarykey:autoIncrement"`
 	Name      string  `json:"name" gorm:"not null; unique"`
 	SheduleID uint64  `json:"sheduleId"`
 	Shedule   Shedule `json:"shedule" gorm:"foreignkey:SheduleID"`
@@ -60,7 +60,7 @@ type Lesson struct {
 type Shedule struct {
 	gorm.Model
 
-	ID        uint64    `json:"id" gorm:"primarykey:autoIncrement"`
+	ID        uint      `json:"id" gorm:"primarykey:autoIncrement"`
 	Date      time.Time `json:"date" gorm:"not null"`
 	DayOfWeek uint8     `json:"dayOfWeek" gorm:"not null"`
 	ClassID   uint64    `json:"classId"`
@@ -70,7 +70,7 @@ type Shedule struct {
 type Mark struct {
 	gorm.Model
 
-	ID       uint64 `json:"id" gorm:"primarykey:autoIncrement"`
+	ID       uint   `json:"id" gorm:"primarykey:autoIncrement"`
 	Number   uint8  `json:"number"`
 	UserID   uint64 `json:"userId"`
 	User     User   `json:"user" gorm:"foreignkey:UserID"`
@@ -81,6 +81,6 @@ type Mark struct {
 type RefreshSession struct {
 	gorm.Model
 
-	ID        uint64    `json:"id" gorm:"primarykey:autoIncrement"`
+	ID        uint      `json:"id" gorm:"primarykey:autoIncrement"`
 	ExpiresAt time.Time `json:"expiresAt" gorm:"not null"`
 }

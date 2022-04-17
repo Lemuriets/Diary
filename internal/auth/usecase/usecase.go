@@ -16,10 +16,15 @@ type UseCase struct {
 	Repository auth.Repository
 }
 
-type tokenClaims struct {
+type AccessTokenClaims struct {
 	jwt.StandardClaims
 	UserId          uint  `json:"userId"`
 	UserPermissions uint8 `json:"userPermissions"`
+}
+
+type RefreshTokenClaims struct {
+	jwt.StandardClaims
+	UserId uint `json:"userId"`
 }
 
 func NewUseCase(repo auth.Repository) *UseCase {
@@ -34,7 +39,7 @@ func (uc *UseCase) GetCount(user model.User) int64 {
 
 func (uc *UseCase) Create(user model.User) error {
 	if user.Login == "" || user.PasswordHash == "" {
-		return auth.UnderfinedLoginOrPassword
+		return auth.EmptyLoginOrPassword
 	}
 
 	if err := uc.Repository.Create(user); err != nil {
@@ -47,40 +52,38 @@ func (uc *UseCase) Create(user model.User) error {
 func (uc *UseCase) GenerateAccessToken(login, password string) (string, error) {
 	user, err := uc.Repository.GetByLogin(login)
 
-	if err != nil || !crypto.CompareHashAndPassword(password, user.PasswordHash) {
+	if err != nil {
 		return "", err
+	} else if !crypto.CompareHashAndPassword(password, user.PasswordHash) {
+		return "", auth.WrongPassword
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, AccessTokenClaims{
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
 		},
-		UserId:          uint(user.ID),
+		UserId:          user.ID,
 		UserPermissions: user.Permissions,
 	})
+
 	return token.SignedString([]byte(os.Getenv("secretkey")))
 }
 
-func (uc *UseCase) GenerateRefreshToken() {
+func (uc *UseCase) GenerateRefreshToken(login string) (string, error) {
+	user, err := uc.Repository.GetByLogin(login)
 
+	if err != nil {
+		return "", err
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, RefreshTokenClaims{
+		StandardClaims: jwt.StandardClaims{
+			IssuedAt:  time.Now().Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 24 * 60).Unix(),
+		},
+		UserId: user.ID,
+	})
+
+	return token.SignedString([]byte(os.Getenv("secretkey")))
 }
-
-// func (uc *UseCase) newJWT() (string, error) {
-// 	user, err := uc.Repository.GetByLogin(login)
-
-// 	if err != nil || !crypto.CompareHashAndPassword(password, user.PasswordHash) {
-// 		return "", err
-// 	}
-
-// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
-// 		StandardClaims: jwt.StandardClaims{
-// 			IssuedAt:  time.Now().Unix(),
-// 			ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
-// 		},
-// 		UserId:          uint(user.ID),
-// 		UserPermissions: user.Permissions,
-// 	})
-
-// 	return token.SignedString([]byte(os.Getenv("secretkey")))
-// }

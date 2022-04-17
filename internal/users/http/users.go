@@ -13,20 +13,20 @@ func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint64(r)
+	id, err := parseurl.GetIdUint(r)
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)
 		return
 	}
-	user := h.UseCase.GetById(id)
+	user := h.UseCase.GetById(uint(id))
 	fmt.Println(r.RemoteAddr)
 	httpjson.OKResponse(w, user)
 
 }
 
 func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint64(r)
+	id, err := parseurl.GetIdUint(r)
 	updateValues := map[string]interface{}{}
 
 	if err != nil {
@@ -43,7 +43,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint64(r)
+	id, err := parseurl.GetIdUint(r)
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)

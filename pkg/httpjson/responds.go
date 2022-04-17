@@ -25,6 +25,13 @@ func NotFoundResponse(w http.ResponseWriter) {
 	RespondJSON(w, result, http.StatusNotFound)
 }
 
+func UnauthorizedResponse(w http.ResponseWriter) {
+	result := map[string]string{
+		"message": "401 unauthorized",
+	}
+	RespondJSON(w, result, http.StatusUnauthorized)
+}
+
 func InternalServerErrorResponse(w http.ResponseWriter) {
 	result := map[string]string{
 		"message": "500 internal server error",
