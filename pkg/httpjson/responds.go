@@ -13,8 +13,8 @@ func RespondJSON(w http.ResponseWriter, payload interface{}, statusCode int) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
 	w.Write([]byte(response))
 }
 

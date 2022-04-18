@@ -29,7 +29,6 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
 	})
-
 }
 
 func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
@@ -51,12 +50,3 @@ func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) UpdateTokens(w http.ResponseWriter, r *http.Request) {
 
 }
-
-// get token
-
-// jwt.Parse(f, func(token *jwt.Token) (interface{}, error) {
-// 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-// 		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-// 	}
-// 	return []byte(os.Getenv("secretkey")), nil
-// })
