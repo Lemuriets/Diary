@@ -25,6 +25,9 @@ func CheckValid(token *jwt.Token) bool {
 	return true
 }
 
-func GetPayload(token *jwt.Token) *jwt.Claims {
-	return &token.Claims
+func GetPayload(token *jwt.Token) jwt.MapClaims {
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return claims
+	}
+	return nil
 }

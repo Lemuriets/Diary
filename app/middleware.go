@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Lemuriets/diary/pkg/httpjson"
@@ -17,10 +16,20 @@ func Authorization(handler http.HandlerFunc, permissions int8) http.HandlerFunc 
 			return
 		}
 		accessToken, err := token.GetToken(authValue[0])
-		fmt.Println(token.GetPayload(accessToken))
 
 		if !token.CheckValid(accessToken) || err != nil {
 			httpjson.UnauthorizedResponse(w)
+			return
+		}
+		claims := token.GetPayload(accessToken)
+		if claims == nil {
+			httpjson.UnauthorizedResponse(w)
+			return
+		}
+		receivedPerm, _ := claims["userPermissions"].(float64)
+		// fmt.Println(receivedPerm)
+		if int8(receivedPerm) > permissions {
+			httpjson.ForbiddenResponse(w)
 			return
 		}
 

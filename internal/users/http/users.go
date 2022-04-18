@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Lemuriets/diary/pkg/httpjson"
@@ -20,7 +19,6 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user := h.UseCase.GetById(uint(id))
-	fmt.Println(r.RemoteAddr)
 	httpjson.OKResponse(w, user)
 
 }

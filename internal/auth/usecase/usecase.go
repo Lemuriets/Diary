@@ -18,8 +18,8 @@ type UseCase struct {
 
 type AccessTokenClaims struct {
 	jwt.StandardClaims
-	UserId          uint  `json:"userId"`
-	UserPermissions uint8 `json:"userPermissions"`
+	UserId          uint `json:"userId"`
+	UserPermissions int8 `json:"userPermissions"`
 }
 
 type RefreshTokenClaims struct {
@@ -41,6 +41,8 @@ func (uc *UseCase) Create(user model.User) error {
 	if user.Login == "" || user.PasswordHash == "" {
 		return auth.EmptyLoginOrPassword
 	}
+
+	user.Permissions = model.MEMBER
 
 	if err := uc.Repository.Create(user); err != nil {
 		return err

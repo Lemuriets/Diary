@@ -49,3 +49,10 @@ func InfoResponse(w http.ResponseWriter, message string) {
 	}
 	OKResponse(w, result)
 }
+
+func ForbiddenResponse(w http.ResponseWriter) {
+	result := map[string]string{
+		"message": "403 forbidden",
+	}
+	RespondJSON(w, result, http.StatusForbidden)
+}

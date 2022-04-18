@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/Lemuriets/diary/model"
 )
 
 // "github.com/Lemuriets/diary/internal/auth/usecase"
@@ -31,9 +33,15 @@ func (app *App) RouteAuth() {
 func (app *App) RouteUsers() {
 	sub := app.Group("/api/users", app.UsersHandler.HelloMsg, "GET")
 
-	sub.RegisterSubHandler("/{id:[1-9]+}", Authorization(app.UsersHandler.Get, 3), "GET")
-	sub.RegisterSubHandler("/update/{id:[1-9]+}", app.UsersHandler.Update, "POST")
-	sub.RegisterSubHandler("/delete/{id:[1-9]+}", app.UsersHandler.Delete, "POST")
+	sub.RegisterSubHandler("/{id:[1-9]+}", app.UsersHandler.Get, "GET")
+	sub.RegisterSubHandler("/update/{id:[1-9]+}", Authorization(
+		app.UsersHandler.Update,
+		model.ADMINISTRATOR,
+	), "POST")
+	sub.RegisterSubHandler("/delete/{id:[1-9]+}", Authorization(
+		app.UsersHandler.Delete,
+		model.ADMINISTRATOR,
+	), "POST")
 }
 
 func (app *App) RouteClasses() {

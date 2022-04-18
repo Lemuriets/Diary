@@ -17,7 +17,7 @@ type User struct {
 	Age          uint8  `json:"age"`
 	ClassID      uint64 `json:"classId"`
 	Class        Class  `json:"class" gorm:"foreignkey:ClassID"`
-	Permissions  uint8  `json:"permissions"`
+	Permissions  int8   `json:"permissions"`
 }
 
 type Class struct {
