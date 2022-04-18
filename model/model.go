@@ -70,9 +70,3 @@ type Mark struct {
 	LessonID uint64 `json:"lessonId"`
 	Lesson   Lesson `json:"lesson" gorm:"foreignkey:LessonID"`
 }
-
-type RefreshSession struct {
-	gorm.Model
-
-	ExpiresAt time.Time `json:"expiresAt" gorm:"not null"`
-}

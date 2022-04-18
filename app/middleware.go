@@ -27,7 +27,6 @@ func Authorization(handler http.HandlerFunc, permissions int8) http.HandlerFunc 
 			return
 		}
 		receivedPerm, _ := claims["userPermissions"].(float64)
-		// fmt.Println(receivedPerm)
 		if int8(receivedPerm) > permissions {
 			httpjson.ForbiddenResponse(w)
 			return
