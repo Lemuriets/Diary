@@ -11,7 +11,7 @@ import (
 )
 
 func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
-	httpjson.InfoResponse(w, "this is an auth service")
+	httpjson.InfoOKResponse(w, "this is an auth service")
 }
 
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {

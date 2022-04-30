@@ -42,6 +42,10 @@ func (app *App) RouteUsers() {
 		app.UsersHandler.Delete,
 		model.ADMINISTRATOR,
 	), "POST")
+	sub.RegisterSubHandler("/multiple-delete", Authorization(
+		app.UsersHandler.MultipleDelete,
+		model.SUPERUSER,
+	), "POST")
 }
 
 func (app *App) RouteClasses() {

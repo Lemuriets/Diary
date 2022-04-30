@@ -43,7 +43,6 @@ func (uc *UseCase) AddClass(user *model.User, class model.Class) error {
 	} else if user.ID == 0 {
 		return users.UndefinedUser
 	}
-
 	uc.Repository.Update(user.ID, map[string]interface{}{
 		"class_id": class.ID,
 	})

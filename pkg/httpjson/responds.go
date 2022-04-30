@@ -43,7 +43,7 @@ func OKResponse(w http.ResponseWriter, payload interface{}) {
 	RespondJSON(w, payload, http.StatusOK)
 }
 
-func InfoResponse(w http.ResponseWriter, message string) {
+func InfoOKResponse(w http.ResponseWriter, message string) {
 	result := map[string]string{
 		"message": message,
 	}
@@ -55,4 +55,11 @@ func ForbiddenResponse(w http.ResponseWriter) {
 		"message": "403 forbidden",
 	}
 	RespondJSON(w, result, http.StatusForbidden)
+}
+
+func BadRequestResponse(w http.ResponseWriter) {
+	result := map[string]string{
+		"message": "400 bad request",
+	}
+	RespondJSON(w, result, http.StatusBadRequest)
 }
