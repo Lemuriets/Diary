@@ -24,28 +24,32 @@ func (app *App) Run() {
 }
 
 func (app *App) RouteAuth() {
-	sub := app.Group("/api/auth", app.AuthHandler.HelloMsg, "GET")
+	sub := app.Router.PathPrefix("/auth").Subrouter()
 
-	sub.RegisterSubHandler("/sign-up", app.AuthHandler.SignUp, "POST")
-	sub.RegisterSubHandler("/sign-in", app.AuthHandler.SignIn, "POST")
+	sub.HandleFunc("/sign-up", app.AuthHandler.SignUp).Methods("POST")
+	sub.HandleFunc("/sign-in", app.AuthHandler.SignIn).Methods("POST")
 }
 
 func (app *App) RouteUsers() {
-	sub := app.Group("/api/users", app.UsersHandler.HelloMsg, "GET")
+	sub := app.Router.PathPrefix("/users").Subrouter()
 
-	sub.RegisterSubHandler("/{id:[1-9]+}", app.UsersHandler.Get, "GET")
-	sub.RegisterSubHandler("/update/{id:[1-9]+}", Authorization(
+	sub.HandleFunc("/{id:[1-9]+}", app.UsersHandler.Get).Methods("GET")
+	sub.HandleFunc("/update/{id:[1-9]+}", Authorization(
 		app.UsersHandler.Update,
 		model.ADMINISTRATOR,
-	), "POST")
-	sub.RegisterSubHandler("/delete/{id:[1-9]+}", Authorization(
+	)).Methods("POST")
+	sub.HandleFunc("/delete/{id:[1-9]+}", Authorization(
 		app.UsersHandler.Delete,
 		model.ADMINISTRATOR,
-	), "POST")
-	sub.RegisterSubHandler("/multiple-delete", Authorization(
+	)).Methods("POST")
+	sub.HandleFunc("/multiple-delete", Authorization(
 		app.UsersHandler.MultipleDelete,
 		model.SUPERUSER,
-	), "POST")
+	)).Methods("POST")
+	sub.HandleFunc("/add-grade", Authorization(
+		app.UsersHandler.AddGrade,
+		model.TEACHER,
+	)).Methods("POST").Queries("user", "{id:[1-9]+}", "grade", "{id:[1-9]+}")
 }
 
 func (app *App) RouteClasses() {

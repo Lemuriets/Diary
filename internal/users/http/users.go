@@ -83,3 +83,7 @@ func (h *Handler) MultipleDelete(w http.ResponseWriter, r *http.Request) {
 	}
 	httpjson.InfoOKResponse(w, fmt.Sprintf("successful delete users with ids: %v", idsArray))
 }
+
+func (h *Handler) AddGrade(w http.ResponseWriter, r *http.Request) {
+	fmt.Print(r)
+}

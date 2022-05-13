@@ -15,12 +15,12 @@ type User struct {
 	Lastname     string `json:"lastname" gorm:"not null"`
 	Patronymic   string `json:"Patronymic" gorm:"not null"`
 	Age          uint8  `json:"age"`
-	ClassID      uint64 `json:"classId"`
-	Class        Class  `json:"class" gorm:"foreignkey:ClassID"`
+	GradeID      uint64 `json:"gradeId"`
+	Grade        Grade  `json:"grade" gorm:"foreignkey:GradeID"`
 	Permissions  int8   `json:"permissions"`
 }
 
-type Class struct {
+type Grade struct {
 	gorm.Model
 
 	Number   uint8  `json:"number" gorm:"not null"`
@@ -40,8 +40,8 @@ type Homework struct {
 	gorm.Model
 
 	Payload string `json:"payload"`
-	ClassID uint64 `json:"classId"`
-	Class   Class  `json:"class" gorm:"not null; foreignkey:ClassID"`
+	GradeID uint64 `json:"gradeId"`
+	Grade   Grade  `json:"grade" gorm:"not null; foreignkey:GradeID"`
 }
 
 type Lesson struct {
@@ -57,8 +57,8 @@ type Shedule struct {
 
 	Date      time.Time `json:"date" gorm:"not null"`
 	DayOfWeek uint8     `json:"dayOfWeek" gorm:"not null"`
-	ClassID   uint64    `json:"classId"`
-	Class     Class     `json:"class" gorm:"not null; foreignkey:ClassID"`
+	GradeID   uint64    `json:"gradeId"`
+	Grade     Grade     `json:"grade" gorm:"not null; foreignkey:GradeID"`
 }
 
 type Mark struct {

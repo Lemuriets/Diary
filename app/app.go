@@ -2,8 +2,6 @@ package app
 
 import (
 	"log"
-	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 
@@ -33,7 +31,7 @@ func NewApp() *App {
 
 	err := database.AutoMigrate(
 		&model.User{},
-		&model.Class{},
+		&model.Grade{},
 		&model.School{},
 		&model.Homework{},
 		&model.Lesson{},
@@ -60,24 +58,4 @@ func NewApp() *App {
 		AuthHandler:  RegisterAuthService(database),
 		UsersHandler: RegisterUsersService(database),
 	}
-}
-
-func (app *App) Group(prefix string, handler func(w http.ResponseWriter, r *http.Request), methods ...string) *Sub {
-	app.Router.HandleFunc(prefix, handler).Methods(methods...)
-
-	if strings.HasSuffix(prefix, "/") {
-		prefix = prefix[:len(prefix)-1]
-	}
-	return &Sub{
-		App:    app,
-		Prefix: prefix,
-	}
-}
-
-func (sub *Sub) RegisterSubHandler(prefix string, handler func(w http.ResponseWriter, r *http.Request), methods ...string) {
-	if len(methods) == 0 {
-		panic(MethodsNotSpecified)
-	}
-
-	sub.App.Router.HandleFunc(sub.Prefix+prefix, handler).Methods(methods...)
 }
