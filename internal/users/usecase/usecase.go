@@ -37,14 +37,14 @@ func (uc *UseCase) MultipleDelete(ids []uint) error {
 	return uc.Repository.MultipleDelete(ids)
 }
 
-func (uc *UseCase) AddGrade(user *model.User, grade model.Grade) error {
-	if grade.ID == 0 {
+func (uc *UseCase) AddGrade(userId uint, gradeId uint) error {
+	if gradeId == 0 {
 		return users.SchoolIsNotExists
-	} else if user.ID == 0 {
+	} else if userId == 0 {
 		return users.UndefinedUser
 	}
-	uc.Repository.Update(user.ID, map[string]interface{}{
-		"grade_id": grade.ID,
+	uc.Repository.Update(userId, map[string]interface{}{
+		"grade_id": gradeId,
 	})
 
 	return nil

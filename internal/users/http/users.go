@@ -15,7 +15,7 @@ func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint(r)
+	id, err := parseurl.GetUintIdFromRequest(r)
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)
@@ -27,7 +27,7 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint(r)
+	id, err := parseurl.GetUintIdFromRequest(r)
 	updateValues := map[string]interface{}{}
 
 	if err != nil {
@@ -44,7 +44,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
-	id, err := parseurl.GetIdUint(r)
+	id, err := parseurl.GetUintIdFromRequest(r)
 
 	if err != nil {
 		httpjson.NotFoundResponse(w)
@@ -85,5 +85,37 @@ func (h *Handler) MultipleDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) AddGrade(w http.ResponseWriter, r *http.Request) {
-	fmt.Print(r)
+	userId, err := parseurl.GetUintIdFromRequest(r)
+
+	if err != nil {
+		httpjson.NotFoundResponse(w)
+		return
+	}
+	gradeIdString := r.URL.Query().Get("grade")
+
+	if gradeIdString == "" {
+		httpjson.BadRequestResponse(w)
+		return
+	}
+	gradeId, err := strconv.ParseUint(gradeIdString, 10, 64)
+
+	if err != nil {
+		httpjson.BadRequestResponse(w)
+		return
+	}
+
+	h.UseCase.AddGrade(userId, uint(gradeId))
+	httpjson.InfoOKResponse(w, "test")
+}
+
+func (h *Handler) ChangePassword(w *http.ResponseWriter, r http.Request) {
+
+}
+
+func (h *Handler) AddPersonalInfo(w *http.ResponseWriter, r http.Request) {
+
+}
+
+func (h *Handler) ChangePermissions(w *http.ResponseWriter, r http.Request) {
+
 }

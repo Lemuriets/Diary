@@ -15,8 +15,10 @@ func (h *Handler) HelloMsg(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
-	accessToken, errAc := h.UseCase.GenerateAccessToken(r.FormValue("login"), r.FormValue("password"))
-	refreshToken, errRef := h.UseCase.GenerateRefreshToken(r.FormValue("login"))
+	login := r.FormValue("login")
+	password := r.FormValue("password")
+	accessToken, errAc := h.UseCase.GenerateAccessToken(login, password)
+	refreshToken, errRef := h.UseCase.GenerateRefreshToken(login)
 
 	if errRef != nil || errAc == gorm.ErrRecordNotFound {
 		httpjson.NotFoundResponse(w)

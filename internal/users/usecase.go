@@ -7,5 +7,5 @@ type UseCase interface {
 	Update(id uint, updateFields map[string]interface{}) error
 	Delete(id uint) error
 	MultipleDelete(ids []uint) error
-	AddGrade(user *model.User, grade model.Grade) error
+	AddGrade(userId uint, gradeId uint) error
 }

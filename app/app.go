@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 
 	authhttp "github.com/Lemuriets/diary/internal/auth/http"
 	schoolhttp "github.com/Lemuriets/diary/internal/schools/http"
@@ -26,8 +27,16 @@ type Sub struct {
 	Prefix string
 }
 
-func NewApp() *App {
-	database := db.InitDB()
+func NewApp(database *gorm.DB) *App {
+	return &App{
+		Router:       mux.NewRouter(),
+		AuthHandler:  RegisterAuthService(database),
+		UsersHandler: RegisterUsersService(database),
+	}
+}
+
+func InitDB() *gorm.DB {
+	database := db.CreateDB()
 
 	err := database.AutoMigrate(
 		&model.User{},
@@ -53,9 +62,5 @@ func NewApp() *App {
 		log.Fatal(err)
 	}
 
-	return &App{
-		Router:       mux.NewRouter(),
-		AuthHandler:  RegisterAuthService(database),
-		UsersHandler: RegisterUsersService(database),
-	}
+	return database
 }

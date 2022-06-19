@@ -13,6 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := app.NewApp()
+	database := app.InitDB()
+	server := app.NewApp(database)
 	server.Run()
 }

@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func InitDB() *gorm.DB {
+func CreateDB() *gorm.DB {
 	// for postgres
 	// dsn := os.Getenv("dsn")
 

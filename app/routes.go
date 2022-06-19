@@ -8,8 +8,6 @@ import (
 	"github.com/Lemuriets/diary/model"
 )
 
-// "github.com/Lemuriets/diary/internal/auth/usecase"
-
 func (app *App) Run() {
 	app.RouteAuth()
 	app.RouteUsers()
@@ -46,10 +44,7 @@ func (app *App) RouteUsers() {
 		app.UsersHandler.MultipleDelete,
 		model.SUPERUSER,
 	)).Methods("POST")
-	sub.HandleFunc("/add-grade", Authorization(
-		app.UsersHandler.AddGrade,
-		model.TEACHER,
-	)).Methods("POST").Queries("user", "{id:[1-9]+}", "grade", "{id:[1-9]+}")
+	sub.HandleFunc("/add-grade/{id:[1-9]+}", app.UsersHandler.AddGrade).Methods("GET")
 }
 
 func (app *App) RouteClasses() {
